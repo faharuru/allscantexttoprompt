@@ -1,0 +1,20 @@
+<!-- Tempel di dalam <application> ... </application> pada
+     android/app/src/main/AndroidManifest.xml, di bawah <activity MainActivity> -->
+<activity
+    android:name=".CaptureActivity"
+    android:exported="true"
+    android:label="Tambah ke Keranjang"
+    android:theme="@android:style/Theme.Translucent.NoTitleBar"
+    android:excludeFromRecents="true"
+    android:taskAffinity="">
+    <intent-filter>
+        <action android:name="android.intent.action.PROCESS_TEXT" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <data android:mimeType="text/plain" />
+    </intent-filter>
+    <intent-filter>
+        <action android:name="android.intent.action.SEND" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <data android:mimeType="text/plain" />
+    </intent-filter>
+</activity>
