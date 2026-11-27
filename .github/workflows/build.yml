@@ -1,0 +1,43 @@
+name: Build APK
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Buat kerangka Android
+        run: flutter create --platforms=android --org com.ketik --project-name ketik_prompt .
+
+      - name: Pasang kode native Android
+        run: |
+          D=android/app/src/main/kotlin/com/ketik/ketik_prompt
+          mkdir -p "$D"
+          cp android_overlay/MainActivity.kt "$D/MainActivity.kt"
+          cp android_overlay/CaptureActivity.kt "$D/CaptureActivity.kt"
+          python3 tool/patch_manifest.py
+
+      - run: flutter pub get
+
+      - name: Build APK
+        run: flutter build apk --release
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: keranjang-prompt-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
